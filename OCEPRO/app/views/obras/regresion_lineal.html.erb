@@ -1,0 +1,39 @@
+<div class="col-md-12 ">
+  	<span><%= link_to  regresion_lineal_obras_path(format: 'pdf'), class: "btn btn-success btn-sm pull-right " do %>
+    <span class="fa fa-print" style="color:white"></span>  <%end%>
+  	</span>
+  	
+<h3>REGRESIÓN LINEAL SIMPLE</h3>
+<br>
+<% a=@a%>
+<% b=@b%>
+<table class="text-center table table-striped table-hover">
+  	<thead>
+	    <tr>
+		    <th class="text-center">Año</th>
+		    <th class="text-center">Total de Visados Realizados</th>
+		    <th class="text-center">Diferencia Porcentual Respecto al Año Anterior</th>
+		    <th ></th>
+	    </tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th class="text-center"><%=a-1%></th>
+			<th class="text-center">No Existen Entradas</th>
+			<th class="text-center">No Existen Entradas</th>
+		</tr>
+		<% for a in a..b%>
+		<% 
+			total_obras_ano = @obras.select(:municipio_obra).where(:created_at=>''+a.to_s+'-1-1'..''+(a.to_i+1).to_s+'-1-1').count
+			total_obras_ano_ant = @obras.select(:municipio_obra).where(:created_at=>''+(a.to_i-1).to_s+'-1-1'..''+a.to_s+'-1-1').count
+			regresion_lineal = (total_obras_ano.to_f - total_obras_ano_ant.to_f)/ total_obras_ano.to_f
+		%>
+		<tr>
+			<th class="text-center"><%=a%> </th>
+			<th class="text-center"><%= total_obras_ano%></th>
+			<th class="text-center"><%=number_to_currency(regresion_lineal.to_f*100, delimiter:",", precision:2, unit: "")%>%</th>
+		</tr>
+		<%end%>
+	</tbody>
+</table>
+</div>

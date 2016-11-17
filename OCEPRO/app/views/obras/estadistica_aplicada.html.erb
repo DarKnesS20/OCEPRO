@@ -1,0 +1,58 @@
+<div class="col-md-12 ">
+	<span><%= link_to  estadistica_aplicada_obras_path(format: 'pdf'), class: "btn btn-success btn-sm pull-right " do %>
+    <span class="fa fa-print" style="color:white"></span>  <%end%>
+  	</span>
+
+	<center>
+		<h3>
+			ESTADÍSTICA APLICADA
+		</h3>
+	</center>
+		  <center >
+	        <strong> 
+	       	  REPORTE ESTADÍSTICO DESCRIPTIVO PARA EL AÑO <%=Time.now.year%>
+	        </strong>
+	      </center>
+	<div class="center">
+	<table class="text-center table table-striped table-hover ">
+	<tbody>
+	  <tr>
+	  <th class="text-center text-avg"> 
+	    <strong> 
+	    	Media de obras aprobadas para este año: <%=number_to_currency(@obras_year.mean, unit:"", precision: 2, separator: ",", delimiter:".")%>
+	    </strong>
+	  </th>
+	  </tr>
+	  <tr>
+	  <th class="text-center text-avg"> 
+	    <strong> 
+	    	Mediana de obras aprobadas para este año: <%=number_to_currency(@obras_year.median, unit:"", precision: 2, separator: ",", delimiter:".")%>
+	    </strong>
+	  </th>
+	  </tr>
+	  <tr>
+	  <th class="text-center text-avg"> 
+	    <strong> 
+	    	Desviación estándar de obras aprobadas para este año: <%=number_to_currency(@obras_year.standard_deviation, unit:"", precision: 2, separator: ",", delimiter:".")%>
+	    </strong>
+	  </th>
+	  </tr>
+	  <tr>
+	  <th class="text-center text-avg"> 
+	    <strong> 
+	    	Varianza de obras aprobadas para este año: <%=number_to_currency(@obras_year.variance, unit:"", precision: 2, separator: ",", delimiter:".")%>
+	    </strong>
+	  </th>
+	  </tr>
+	  <tr>
+	  <th class="text-center text-avg"> 
+	    <strong> 
+	    	Municipio con más obras aprobadas para este año: <%=@modarep.mode%>
+	    </strong>
+	  </th>
+	  </tr>
+	  </tbody>
+		</table>
+	</div>
+
+</div>

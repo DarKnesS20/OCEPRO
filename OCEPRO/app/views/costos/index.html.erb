@@ -1,0 +1,35 @@
+<div class="pull-right"> 
+  <%= link_to '', new_costo_path, class:'btn btn-primary fa fa-plus', style: 'color:white' %>
+</div>
+<h3>COSTOS</h3><br>
+
+<table class="col-md-12 text-center table table-striped table-hover">
+  <thead>
+    <%= hidden_field_tag :direction, params[:direction]%>
+    <%= hidden_field_tag :sort, params[:sort]%>
+    <tr>
+      <th class="text-center">Descripción<%= sortable(:descripcion) %></th>
+      <th class="text-center">Costos<%= sortable(:costos) %></th>
+      <th class="text-center">Desde<%= sortable(:valido_desde) %></th>
+      <th class="text-center">Hasta <%= sortable(:valido_hasta) %></th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <center>
+      <% @costos.each do |costo| %>
+        <tr>
+          <td><%= costo.descripcion.upcase %></td>
+          <td><%=number_to_currency(costo.costos, unit: "BsF  ", delimiter: ".", separator: ",")%></td>
+          <td><%= ltz(costo.valido_desde) %></td>
+          <td><%= ltz(costo.valido_hasta) %></td>
+
+
+          <td><%= link_to '', edit_costo_path(costo), class:'btn btn-success fa fa-pencil', style: 'color:white' %></td>
+        
+        </tr>
+      <% end %>
+    </center>
+  </tbody>
+</table>

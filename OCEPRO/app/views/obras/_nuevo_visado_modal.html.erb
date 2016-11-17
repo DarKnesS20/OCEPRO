@@ -1,0 +1,107 @@
+  <!-- Modal -->
+<div class="modal nuevo-visado-helper" id="newVisado" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-costos="<%= @costos.to_json %>" data-costos-url="<%= buscar_por_descripcion_costos_url(format: :json)%>" data-exteriores-url="<%= buscar_por_tipo_area_area_exteriores_url(format: :json)%>" data-indice-costos-complejidad="<%=@indice_costos_uso_cats.to_json%>" data-cuota-civ = "<%=@cuota_civ%>" data-honorarios-minimos-costo-url="<%=  buscar_por_costo_proyecto_honorario_minimos_url(format: :json)%>" data-honorarios-url="<%= buscar_por_tipo_visado_honorario_minimos_url(format: :json)%>" data-obra-id="<%= @obra.id%>" data-visados-url="<%= visados_url(format: :json)%>" data-obra-url="<%= obra_url(@obra, format: :json)%>">
+ 
+
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">AGREGAR VISADO</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group" >
+          <label class="">Tipo de Visado</label><br>
+          <div class="col-sm-4" style="padding:0">
+            <select id="tipo_visado" class="form-control"> 
+              <option></option>
+              <option>ANTEPROYECTO</option>
+              <option>EXTERIORES</option>
+              <option>PROYECTO</option>
+              <option>URBANISMO</option>
+            </select>
+          </div>
+        </div><br>
+
+        <div class="form-group" id="selector_de_uso"> 
+          <label class="">Uso de estructura</label><br>
+          <%= select_tag 'indice_costos_complejidad', options_for_select(@indice_costos_uso_cats.collect{ |i| [i.vivienda_uso   ] }),{class: 'form-control', include_blank: ''} %>
+        </div>
+        <div class="form-group">
+          <label>Area Bruta <span class="unidad_distancia"></span>:</label>
+          <input type= "text" class="form-control validate-number" id="area_bruta" required minlength="2">
+        </div>
+
+        <div class="form-group">
+          <label>Indice de complejidad:</label>
+          <input class="form-control" id="complejidad" disabled>
+        </div>
+
+        <div class="form-group">
+          <label>Costo construcción <span class="unidad_monetaria_distancia"></span>:</label>
+          <input class="form-control" id="costo_construccion" disabled>
+        </div>
+
+        <div class="form-group">
+          <label>Costo construcción estimado/BsF:</label>
+          <input class="form-control" id="costo_construccion_estimado" disabled>
+        </div>
+
+        <div class="form-group exturb" style="display:none" >  
+          <table class="table table-striped" >
+            <thead><tr>
+              <th></th>
+              <th>Concepto</th>
+              <th>%</th>
+            </tr></thead>
+            <tbody id="honorarios_minimos">
+            </tbody>
+          </table>
+        </div>
+        <div class="form-group proyantep" style="display:none" > 
+        <label class="">Honorario minimo</label><br>
+        <div class="col-sm-4" style="padding:0">
+          <select id="selector_honorario" class="form-control"> 
+          </select> 
+        </div><br>
+        </div>
+        
+        <div class="form-group">
+          <label>Costo estimado proyecto/BsF:</label>
+          <input class="form-control" id="costo_estimado_proyecto" disabled>
+        </div>
+
+        <div class="form-group">
+          <label><span  class="tipo_visado_label"></span>:</label>
+          <input class="form-control" id="costo_completo" disabled>
+        </div>
+
+        <div class="form-group" style="display:none" id="es_repeticion" > 
+          <div class="checkbox">
+            <label><input id="pollito" type="checkbox" value="">Es repetición?</label>
+          </div>
+        </div>
+
+        <div class="cantidad_repeticion form-group" style="display:none">
+        <label>Cantidad de repeticiones:</label>
+          <input id = "num_repeticiones" class="form-control validate-number"/>
+        </div>
+       <div class="cantidad_repeticion form-group" style="display:none">
+          <label><span  class="tipo_visado_label"></span>:</label>
+          <input id = "costo_completo_repeticion" class="form-control" disabled>
+        </div>
+         <div class="form-group">
+          <label>Arancel a pagar/BsF:</label>
+          <input class="form-control" id="arancel_de_visado" disabled>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger fa fa-times" data-dismiss="modal" id="cancelar"></button>
+        <button type="button" class="btn btn-success fa fa-check" id="guardar"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,38 @@
+<%= form_for @costos_civ, :html => {:class => 'x'} do |f| %>
+  <% if @costos_civ.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@costos_civ.errors.count, "error") %> prohibited this costos_civ from being saved:</h2>
+
+      <ul>
+      <% @costos_civ.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+ <div class="col-md-6 col-md-offset-3">
+
+    <div class="form-group">
+      <%= f.label :civ, "Costo C.I.V" %><br>
+      <%= f.number_field :civ,  class: 'form-control', :required => true %>
+    </div>
+
+  </div>
+  <center> 
+    <div class="actions col-md-12">
+      <%= f.submit 'Aceptar', class: 'btn btn-primary' %>
+    </div>
+    <% end %>
+  </center>
+
+<script>
+  
+$( ".x").validate({
+  rules: {
+    field: {
+      required: true
+    }
+  }
+});
+
+</script>

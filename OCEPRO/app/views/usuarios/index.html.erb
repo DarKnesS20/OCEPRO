@@ -1,0 +1,71 @@
+<a href="">  <div style="float:right"> <%= link_to '', new_usuario_registration_path, class:'btn btn-primary fa fa-plus', style: 'color:white' %> </a>
+</div>
+<h3>USUARIOS</h3>
+
+<%= form_tag(usuarios_path, method: :get, id: 'usuarios-filter') do %>
+  <table class="col-md-12 text-center table table-striped table-hover">
+    <thead>
+    <tr>
+      <th width="10%"><%= text_field_tag(:usuario, @usuarios_params[:usuario],
+        placeholder: 'usuario',
+        class: 'form-control pollito',  form: 'usuarios-filter') %></th>
+
+      <th width="10%"><%= text_field_tag(:nombres, @usuarios_params[:nombres],
+        placeholder: 'Nombre',
+        class: 'form-control pollito',  form: 'usuarios-filter') %></th>
+
+      <th width="10%"><%= text_field_tag(:cedula, @usuarios_params[:cedula],
+        placeholder: 'Cedula',
+        class: 'form-control pollito',  form: 'usuarios-filter') %></th>
+
+      <th width="10%"><%= text_field_tag(:civ, @usuarios_params[:civ],
+        placeholder: 'C.I.V',
+        class: 'form-control pollito',  form: 'usuarios-filter') %></th>
+
+      <th width="10%"><%= text_field_tag(:email, @usuarios_params[:email],
+        placeholder: 'Email',
+        class: 'form-control pollito',  form: 'usuarios-filter') %></th>
+      
+      <th><%= submit_tag('Filtrar', class: 'btn btn-primary btn-sm', form: 'usuarios-filter') %></th>
+
+    </tr>
+      <%= hidden_field_tag :direction, params[:direction]%>
+      <%= hidden_field_tag :sort, params[:sort]%>
+
+      <tr>
+        <th class="text-center">Usuario </th>
+        <th class="text-center">Nombre </th>
+        <th class="text-center">Cédula</th>
+        <th class="text-center">C.I.V</th>
+        <th class="text-center">Correo</th>
+        <th class="text-center">Total ingresos</th>
+        <th class="text-center">IP de ingreso</th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+   
+      <center>
+      <% @usuarios.each do |usuario| %>
+        <tr>
+          <td><%= usuario.usuario %></td>
+          <td><%= usuario.nombres.capitalize %> <%= usuario.apellidos.capitalize %></td>
+          <td><%= usuario.tipo_ci_coordinador%> <%= number_to_currency(usuario.cedula, unit: " ", delimiter: ".", precision: 0)%></td>
+          <td><%= number_to_currency(usuario.civ, unit: " ", delimiter: ".", precision: 0) %></td>
+          <td><%= usuario.email %></td>
+          <td><%= usuario.sign_in_count %></td>
+          <td><%= usuario.last_sign_in_ip %></td>
+          <td><%= link_to '', edit_usuario_path(usuario), class:'btn btn-success fa fa-pencil', style: 'color:white' %></td>
+          <td><%= link_to '', usuario_path(usuario), class:'btn btn-danger fa fa-trash', style: 'color:white' , method: :delete, data: { confirm: 'Esta seguro?' } %></td>
+        </tr>
+        <% end %>
+      
+    </tbody>
+      </center>
+  </table>
+<% end %>
+
+<br>
+
+

@@ -1,0 +1,61 @@
+# Additional translations at https://github.com/plataformatec/devise/wiki/I18n
+
+es:
+  devise:
+    confirmations:
+      confirmed: "Su cuenta ha sido confirmado exitosamente."
+      send_instructions: "Recibira una confirmacion en su correo en un par de minutos."
+      send_paranoid_instructions: "Si su correo existe en nuestra base de datos, Recibirá instrucciones de como confirmar su cuenta en unos minutos."
+    failure:
+      already_authenticated: 'Usted ya ha ingresado.'
+      inactive: "Su cuenta no ha sido activada aun."
+      invalid: "Usuario/contraseña incorrectos."
+      locked: "Su cuenta esta bloqueada."
+      last_attempt: "You have one more attempt before your account will be locked."
+      not_found_in_database: "Usuario o contraseña incorrectos."
+      timeout: "Your session expired. Please sign in again to continue."
+      unauthenticated: "Usted debe ingresar antes de continuar."
+      unconfirmed: "You have to confirm your account before continuing."
+      deleted_account: "Su cuenta fue eliminada."
+    mailer:
+      confirmation_instructions:
+        subject: "Instrucciones de confirmación"
+      reset_password_instructions:
+        subject: "Instrucciones para recuperación de contraseña"
+      unlock_instructions:
+        subject: "Instrucciones de desbloqueo"
+    omniauth_callbacks:
+      failure: "Usted no puede ser autenticado de %{kind} porque \"%{reason}\"."
+      success: "Autenticacion de cuenta exitosa %{kind}."
+    passwords:
+      no_token: "No puedes accesar a esta página sin haber pasado por el reinicio de contraseña, Si vienes de un enlace de reinicio de correo, asegurate de que usas el enlace correcto."
+      send_instructions: "Recibirá un correo electrónico con instrucciones para recuperar su contraseña en unos minutos."
+      send_paranoid_instructions: "Si los datos de su cuenta existen en nuestra base de datos, recibirá un correo electrónico con instrucciones para recuperar su contraseña en unos minutos."
+      updated: "Su contraseña ha sido cambiada exitosamente. Ahora se encuentra en el sistema."
+      updated_not_active: "Su contraseña ha sido cambiada exitosamente."
+    registrations:
+      destroyed: "Bye! Your account was successfully cancelled. We hope to see you again soon."
+      signed_up: "Usuario creado satisfactoriamente."
+      signed_up_but_inactive: "You have signed up successfully. However, we could not sign you in because your account is not yet activated."
+      signed_up_but_locked: "You have signed up successfully. However, we could not sign you in because your account is locked."
+      signed_up_but_unconfirmed: "A message with a confirmation link has been sent to your email address. Please open the link to activate your account."
+      update_needs_confirmation: "Usted a actualizado su cuenta satisfactoriamente, Pero necesitamos confirmar su nueva direccion de correo. Por favor revise su correo."
+      updated: "Usted ha actualizado su cuenta exitosamente."
+    sessions:
+      signed_in: "Usted ha ingresado exitosamente."
+      signed_out: "Usted ha salido exitosamente."
+    unlocks:
+      send_instructions: "Usted recibirá instruccione de desbloqueo en su correo en un par de minutos."
+      send_paranoid_instructions: "If your account exists, you will receive an email with instructions about how to unlock it in a few minutes."
+      unlocked: "Su cuenta ha sido desbloqueada satisfactoriamente. Por favor ingrese para continuar."
+  errors:
+    messages:
+      already_confirmed: "Ya fue confirmado. Por favor ingrese"
+      confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
+      expired: "ha expirado, por favor solicite de nuevo"
+      not_found: "no se encontró"
+      not_locked: "No fue bloqueado"
+      not_saved:
+        one: "Un error impidió que este %{resource} fuera guardado:"
+        other: "%{count} errores impidieron que este %{resource} fuera guardado:"
+      accept: "Solo se admiten formatos .pdf"

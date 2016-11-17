@@ -1,0 +1,169 @@
+<% if policy(Obra).new? %>
+<div class="pull-right"> <%= link_to '', new_obra_path, class:'btn btn-primary fa fa-plus', style: 'color:white'   %>
+  
+  <%= link_to '', multifirma_path  , class:'btn btn-success fa fa-file', style: 'color:white', id: 'multifirmoso' %>
+
+</div>
+<% end %>   
+<h3>OBRAS</h3>
+<div class="col-md-12 ">
+<%= form_tag(obras_path, method: :get, id: 'obras-filter') do %>
+
+<table class="text-center table table-striped table-hover">
+  <thead>
+    <tr>
+     <th  width="12%"><%= select_tag(:tipo_obra, options_for_select(TIPO_VISADO, selected: @obras_params[:tipo_obra]), include_blank: 'Tipo',
+      class: 'form-control pollito1', form: 'obras-filter')
+    %></th>
+
+    <th  width="12%"><%= select_tag(:uso_obra, options_for_select(@usos.map{ |uso| [uso.descripcion_construccion, uso.descripcion_construccion]}, selected: @obras_params[:uso_obra]), include_blank: 'Uso', class: 'form-control pollito', form: 'obras-filter')
+    %></th>
+    <th width="12%"><%= text_field_tag(:nombre, @obras_params[:nombre],
+      placeholder: 'Nombre',
+      class: 'form-control pollito',  form: 'obras-filter') %></th>
+
+    <th width="10%" colspan="2"><%= text_field_tag(:usuario_civ, @obras_params[:usuario_civ],
+      placeholder: 'C.I.V',
+      class: 'form-control pollito',  form: 'obras-filter') %></th>
+
+    <th width="10%"><%= text_field_tag(:direccion_obra, @obras_params[:direccion_obra],
+      placeholder: 'Dirección',
+      class: 'form-control pollito',  form: 'obras-filter') %></th>
+
+    <th  width="12%"><%= select_tag(:municipio_obra,
+      options_for_select(MUNICIPIOS, selected: @obras_params[:municipio_obra]),
+      include_blank: 'Municipios',
+      class: 'form-control pollito', form: 'obras-filter')
+    %></th>
+
+    <th width="20%">
+      
+      <span class="col-md-12" style="float:left; display:none;" id="date-filter">
+
+        <%= text_field_tag(:desde, @obras_params[:desde],
+          placeholder: 'Desde',
+          class: 'form-control bootstrap-datetimepicker pollito',  form: 'obras-filter') %>
+
+        <%= text_field_tag(:hasta, @obras_params[:hasta],
+          placeholder: 'Hasta',
+          class: 'form-control bootstrap-datetimepicker pollito', form: 'obras-filter') %>
+      </span>
+
+    </th>
+    <th  width="12%"><%= select_tag(:status_obra,
+      options_for_select(@status_obras.map{|tipo| [t("shared.status_obra.#{tipo}"), tipo]}, selected: @obras_params[:status_obra]),
+      include_blank: '',
+      class: 'form-control pollito', form: 'obras-filter')%>
+    </th>
+    <%= hidden_field_tag :direction, params[:direction], form: 'obras-filter' %>
+    <%= hidden_field_tag :sort, params[:sort], form: 'obras-filter' %>
+    
+    <th><%= submit_tag('Filtrar', class: 'btn btn-primary btn-sm', form: 'obras-filter') %></th>
+
+  </tr> 
+    <tr>
+      <th class="text-center">Tipo <%= sortable(:tipo_obra) %></th>
+      <th class="text-center">Uso <%= sortable(:uso_obra) %></th>
+      <th class="text-center">Nombre <%= sortable(:nombre) %> </th>
+      <th class="text-center">Coordinador </th>
+      <th class="text-center">C.I.V <%= sortable(:civ) %></th>
+      <th class="text-center">Ubicación</th>
+      <th class="text-center">Municipio  <%= sortable(:municipio_obra) %></th>
+      <th class="text-center">Fecha  <span class="fa fa-caret-square-o-down" style="float:right; cursor:pointer" id="date-expand"></span></th>
+      <th class="text-center">ESTADO</th>
+      <th ></th>
+    </tr>
+  
+  </thead>
+
+  <tbody>
+ 
+    <center>
+ 
+    <% @obras.each do |obra| %>
+      <tr>
+        <td><%= obra.tipo_obra %></td>
+        <td><%= obra.uso_obra%></td>
+        <td><%= obra.nombre%></td>
+        <td><%= obra.coordinador_proyecto.nombres.capitalize %> <%= obra.coordinador_proyecto.apellidos.capitalize %></td>
+        <td><%= number_to_currency(obra.coordinador_proyecto.civ, unit: " ", delimiter: ".", precision: 0)%></td>
+        <td><%= obra.direccion_obra %></td>
+        <td><%= obra.municipio_obra %></td>
+        <td><%= ltz(obra.created_at) %></td>
+        <td style="size:60"> <strong> <%= t("shared.status_obra.#{obra.status_obra}")  %></strong> </td> 
+        <td style="white-space: nowrap;">
+
+          <%= link_to '', obra, class:'btn btn-primary fa fa-eye', style: 'color:white' %>
+          <% if policy(obra).edit? && obra.creado? && current_usuario.agremiado? %>
+          <%= link_to '', edit_obra_path(obra), class:'btn btn-success fa fa-pencil hidden', style: 'color:white' %>
+          <% end %>
+          <% if policy(obra).destroy? %>
+          <%= link_to '', obra, class:'btn btn-danger fa fa-trash', style: 'color:white' , method: :delete, data: { confirm: 'Esta seguro?' } %>          
+        </td> 
+
+        <%end%>
+      </tr>
+    <% end %>
+    
+  </tbody>
+    </center>
+</table>
+<table class="text-center table table-striped table-hover">
+<tfoot>
+    <tr>
+      <center class="text-avg" >
+        <strong> OBRAS POR BUSQUEDA:  <%= @obras.count(:municipio_obra) %> </strong>
+      </center>
+      <th class="text-center text-avg"> 
+        <strong> 
+          MUNICIPIO CON MAS OBRAS: <%= @moda%>
+        </strong>
+      </th>
+      <th class="text-center text-avg" >
+        <strong>
+          PROMEDIO AREA NETA DE CONSTRUCCIÓN DE OBRAS: <%= number_to_currency(@obras.average(:area_neta_construccion), unit:"", precision: 2, separator: ",", delimiter:".") %>
+        </strong>
+      </th>
+    </tr>
+    <tr>
+      <th class="text-center text-avg">
+        <strong> 
+          PROMEDIO DE ÁREA BRUTA DE CONSTRUCCIÓN: <%= number_to_currency(@obras.average(:area_bruta_construccion), unit:"", precision: 2, separator: ",", delimiter:".") %>  
+        </strong>
+      </th>
+      <th class="text-center text-avg"> 
+        <strong> 
+          PROMEDIO DE ÁREA DE PARCELA DE CONSTRUCCIÓN: <%= number_to_currency(@obras.average(:area_parcela), unit:"", precision: 2, separator: ",", delimiter:".") %> 
+        </strong>
+      </th>
+    </tr>
+
+</tfoot>
+</table>
+</div>
+<%end%>
+<br>
+
+<script>
+  $('#date-expand').click(function(){
+    $('#date-filter').toggle();
+  });
+
+  if ($('#desde').val()!='' ||$('#hasta').val()!=''){
+    $('#date-filter').show();
+  }
+
+
+  $(document).ready(function(){
+    var dateTimePickerOptions = {
+      format: 'YYYY-MM-DD',
+      stepping: 1,
+      //useCurrent: false,
+      sideBySide: true,
+      showClear: true,
+      showClose: true,
+      showTodayButton: true,
+    };
+    $('.bootstrap-datetimepicker').datetimepicker(dateTimePickerOptions);
+  });
+</script>

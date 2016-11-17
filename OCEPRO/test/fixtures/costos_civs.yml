@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  civ: 1.5
+  created_by_id: 
+
+two:
+  civ: 1.5
+  created_by_id: 

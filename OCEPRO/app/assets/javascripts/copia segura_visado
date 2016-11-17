@@ -1,0 +1,387 @@
+class VisadoObrasHelper
+
+  @tratarDeEnlazar: ()->
+    @bindInstances()  if $('.nuevo-visado-helper').length > 0
+
+  @bindInstances: ()->
+    new @({container:$('.nuevo-visado-helper')}).bind() 
+
+  constructor: (options)->
+    @container                      = $(options.container)
+    @selector_tipo_visado           = $('#tipo_visado')
+    @selector_de_uso_container      = $('#selector_de_uso')
+    @selector_de_uso                = @selector_de_uso_container.find('select')
+    @area_bruta                     = $('#area_bruta')
+    @costo_estimado_proyecto_input  = $('#costo_estimado_proyecto')
+    @boton_guardar                  = $('#guardar')
+    @boton_cancelar                 = $('#cancelar')
+    @es_repeticion                  = $('#es_repeticion')
+    @es_repeticion_checkbox         = $('#pollito')
+    @cantidad_repeticiones_input    = $('#num_repeticiones')
+    @arancel_visado_input           = $('#arancel_de_visado')
+    @complejidades                  = $('#complejidad')
+    @resultado                      = $('#costo_construccion')
+    @resultado_estimado             = $('#costo_construccion_estimado')
+    @total                          = $('#costo_completo') 
+    @tablita                        = $('#honorarios_minimos')
+    @boton_oceprone                 = $('#boton_oceprone')
+    @numero_oceprone                = $('#numero_ocepro')
+    @comentario_obra                = $('#comentario_obra')
+    @boton_comentario               = $('#boton_comentario')
+    console.log 'BOTON Y NUMERO SALUD', @boton_oceprone, @numero_oceprone
+    @indice_complejidad = null
+    @descarga_pdf                   = $('#descarga_pdf')
+
+    @costos                   = @container.data('costos')
+    @costos_url               = @container.data('costos-url')
+    @obra_url                 = @container.data('obra-url')
+    @indice_costo_complejidad = @container.data('indice-costos-complejidad')
+    @exteriores_url           = @container.data('exteriores-url')
+    @cuota_civ                = @container.data('cuota-civ')
+    @honorario_minimo_url     = @container.data('honorarios-minimos-costo-url')
+    @obra_id                  = @container.data('obra-id')
+    @honorarios_url           = @container.data('honorarios-url')
+    @visados_url              = @container.data('visados-url')
+  
+  bind: ()->
+    @selector_tipo_visado.on 'change', (evt) =>
+      tipo_visado = @selector_tipo_visado.val()
+      $('.tipo_visado_label').text(tipo_visado)
+      @colocar_unidades_de_medida(tipo_visado)
+      @area_bruta.val('')
+      @costo_estimado_proyecto_input.val('')
+      $('#costo_construccion_estimado').val('')
+      if ((tipo_visado == 'PROYECTO') ||  (tipo_visado == 'ANTEPROYECTO'))
+        @costo_construccion = null
+        $('#costo_construccion').val('')
+        @es_repeticion.show()
+        @honorarios_minimos_distancia = null
+        $('.proyantep').show()
+        $('.exturb').hide()
+        @buscarHonorariosMinimosPorTipoVisado(tipo_visado)
+      else
+        @buscarCostoConstruccion(tipo_visado) 
+        @es_repeticion.hide()
+        $('.exturb').show()
+        $('.proyantep').hide()
+
+    @area_bruta.on 'blur', (evt) =>
+      @calcular_costo_construccion_estimado()
+
+    @selector_de_uso.on 'change', (evt) =>
+      tipo_uso = @selector_de_uso.val()
+      tipo_visado = @selector_tipo_visado.val()
+      for indice_complejidad in @indice_costo_complejidad
+        if tipo_uso == indice_complejidad.vivienda_uso
+          @indice_complejidad = indice_complejidad
+          $('#complejidad').val(indice_complejidad.indice_complejidad)
+          if ((tipo_visado == 'PROYECTO') ||  (tipo_visado == 'ANTEPROYECTO'))
+            $('#costo_construccion').val(indice_complejidad.indice_costo)
+            @costo_construccion = indice_complejidad.indice_costo
+            @calcular_costo_construccion_estimado() 
+          break
+
+    @cantidad_repeticiones_input.on 'blur', (evt) =>
+      cantidad = parseInt(@cantidad_repeticiones_input.val())
+      console.log 'CANTIDAD ', cantidad, typeof cantidad
+      porcentaje = @honorarioPorRepeticion(cantidad)
+      console.log 'PORCENTAJE ', porcentaje, typeof porcentaje
+      costo_completo_repeticion = @costo_completo * (@indice_complejidad.indice_complejidad + porcentaje)
+      if costo_completo_repeticion > 10000000
+        costo_de_visado = (costo_completo_repeticion * 0.01) + (6 * @cuota_civ)
+      else     
+        costo_de_visado = (costo_completo_repeticion * 0.0120) + (2 * @cuota_civ)
+
+
+      $('#costo_completo_repeticion').val(costo_completo_repeticion)
+      @costo_completo_repeticion = costo_completo_repeticion 
+      @arancel_visado_input.val(costo_de_visado)
+
+
+    @es_repeticion_checkbox.on 'click', (evt) =>
+      if @es_repeticion_checkbox.prop("checked")
+        $('.cantidad_repeticion').show()
+      else
+        $('.cantidad_repeticion').hide()
+
+    $('#selector_honorario').on 'change', (evt) =>
+      concepto = $('#selector_honorario').val()
+      tipo_visado = @selector_tipo_visado.val()
+      @buscarHonorarioMinimo(tipo_visado, concepto)
+
+    @boton_cancelar.on 'click', (evt) =>
+      @limpiarFormulario()
+
+    @boton_oceprone.on 'click', (evt) =>
+      if @numero_oceprone.val() == ""
+        sweetAlert("Error!", "El campo se encuentra vacio.", "error")
+      else
+        console.log 'presionado el boton'
+        n_oceprone = @numero_oceprone.val()
+        console.log n_oceprone
+        obra =
+          n_oceprone: n_oceprone
+        console.log "DATA", obra 
+        $.ajax(
+          url: @obra_url,
+          method: 'PUT',
+          data:{obra: {n_oceprone: n_oceprone}}
+        ).done (resp) =>
+          console.log 'RESPUESTA', resp 
+          swal
+            type: 'success'
+            title: 'El numero oceprone ha sido asignada exitosamente.'
+            () ->
+              window.location.reload()
+        .fail () =>
+          swal
+            type: 'danger'
+            tittle: 'Ha ocurrido un problema al asignar el numero de expediente.'
+            () ->
+              window.location.reload()
+
+    @boton_comentario.on 'click', (evt) =>
+      if @comentario_obra.val() == "" 
+        sweetAlert("Error!", "El campo se encuentra vacio.", "error")
+      else
+        comentario = @comentario_obra.val()
+        obra =
+          comentario: comentario
+        $.ajax(
+          url: @obra_url,
+          method: 'PUT',
+          data:{obra: {comentario: comentario}}
+        ).done (respuesta) =>
+          
+          swal
+            type: 'success'
+            title: 'Su comentario ha sido guardado exitosamente.'
+            () ->
+              window.location.reload()
+        .fail () =>
+          swal
+            type: 'danger'
+            tittle: 'Ha ocurrido un problema al guardar el comentario, intente nuevamente.'
+            () ->
+              window.location.reload()
+    @boton_guardar.on 'click', @eventoGuardarVisado
+
+  colocar_unidades_de_medida: (tipo_visado) =>
+    if tipo_visado == 'URBANISMO' 
+      $('.unidad_distancia').text('Ha')
+      $('.unidad_monetaria_distancia').text('Bs/Ha')
+    else
+      $('.unidad_distancia').text('mts')
+      $('.unidad_monetaria_distancia').text('Bs/mts')
+      
+  calcular_costo_construccion_estimado: () =>
+    tamano_area_bruta = @area_bruta.val()
+    tipo_visado = @selector_tipo_visado.val()
+    console.log @indice_complejidad.indice_complejidad, @indice_complejidad
+    if tamano_area_bruta
+      if ((tipo_visado == 'PROYECTO') ||  (tipo_visado == 'ANTEPROYECTO'))
+        costo_estimado_construccion = (tamano_area_bruta * @indice_complejidad.indice_costo)
+        
+      else
+        @buscandoAfuera(tipo_visado, tamano_area_bruta)
+        costo_estimado_construccion = (tamano_area_bruta * @costo_construccion)
+
+      $('#costo_construccion_estimado').val(costo_estimado_construccion)
+      @costo_construccion_estimado = costo_estimado_construccion
+
+    else
+      $('#costo_construccion_estimado').val('') 
+      @costo_construccion_estimado = null
+
+
+
+  buscarCostoConstruccion: (descripcion) =>
+    $.ajax @costos_url+"?descripcion=#{descripcion}",
+      type: 'GET'
+      dataType: 'json'
+      error: (jqXHR, textStatus, errorThrown) ->
+        console.log "Falle "
+      success: (data, textStatus, jqXHR) =>
+        @costo_construccion = data.costos
+        $('#costo_construccion').val(@costo_construccion)
+
+
+
+  buscarHonorariosMinimosPorTipoVisado: (tipo_visado) =>
+    console.log "TIPO VISADO ", tipo_visado, @honorarios_url, "#{@honorarios_url}?tipo_visado=#{tipo_visado}"
+    $.ajax "#{@honorarios_url}?tipo_visado=#{tipo_visado}",
+      type: 'GET'
+      dataType: 'json'
+      error: (jqXHR, textStatus, errorThrown) ->
+        console.log "Falle "
+      success: (data, textStatus, jqXHR) =>
+        @crearSelectHonorarios(data)
+
+
+  buscandoAfuera: (tipo_area, tamano_area_bruta) =>
+    $.ajax @exteriores_url+"?tipo_area=#{tipo_area}&tamano=#{tamano_area_bruta}",
+      type: 'GET'
+      dataType: 'json'
+      error: (jqXHR, textStatus, errorThrown) ->
+          console.log "Falle "
+      success: (data, textStatus, jqXHR) =>
+        @honorarios_minimos_distancia = data
+        @crearCheckboxesHonorarios(data)
+
+
+  buscarHonorarioMinimo: (tipo_visado, concepto) =>
+    $.ajax @honorario_minimo_url+"?tipo_visado=#{tipo_visado}&concepto=#{concepto}&costo=#{@costo_construccion_estimado}",
+      type: 'GET'
+      dataType: 'json'
+      error: (jqXHR, textStatus, errorThrown) ->
+        console.log "Falle "
+      success: (data, textStatus, jqXHR) =>
+        @calcularCostoEstimadoProyecto(data)
+
+
+      
+  calcularCostoEstimadoProyectoExtUrb: () =>
+    console.log "Ahora calculare el costo estimado del proyecto"
+    selected = $(":checkbox[name='honorario_minimos']:checked")
+    porcentaje = 0
+    for checkbox_selected in selected
+      porcentaje += parseFloat($(checkbox_selected).attr('data-porcentaje'))
+
+    @costo_estimado_proyecto = @costo_construccion_estimado * (porcentaje / 100)
+    @porcentaje_tabla_datos = porcentaje
+    console.log @costo_estimado_proyecto
+    @costo_estimado_proyecto_input.val(@costo_estimado_proyecto )
+    costo_completo = @costo_estimado_proyecto  * @indice_complejidad.indice_complejidad
+    console.log @cuota_civ, typeof @cuota_civ
+
+    if costo_completo > 10000000
+      costo_de_visado = (costo_completo * 0.01) + (6 * @cuota_civ)
+    else     
+      costo_de_visado = (costo_completo * 0.0120) + (2 * @cuota_civ)
+
+    $('#costo_completo').val(costo_completo)
+    @costo_completo = costo_completo 
+    @arancel_visado_input.val(costo_de_visado)
+
+  calcularCostoEstimadoProyecto: (data) =>
+    console.log "Ahora calculare el costo estimado del proyecto", data
+    tipo_visado = @selector_tipo_visado.val()
+    @costo_estimado_proyecto = @costo_construccion_estimado * (data[0].porcentaje / 100)
+    @porcentaje_tabla_datos = data[0].porcentaje 
+    @costo_estimado_proyecto_input.val(@costo_estimado_proyecto )
+    costo_completo = @costo_estimado_proyecto  * @indice_complejidad.indice_complejidad
+
+    if costo_completo > 10000000
+      costo_de_visado = (costo_completo * 0.01) + (6 * @cuota_civ)
+    else     
+      costo_de_visado = (costo_completo * 0.0120) + (2 * @cuota_civ)
+
+    $('#costo_completo').val(costo_completo)
+    @costo_completo = costo_completo 
+    @arancel_visado_input.val(costo_de_visado)
+    
+
+  crearCheckboxesHonorarios: (honorarios_minimos_distancia) =>
+    div_honorarios_minimos = $('#honorarios_minimos')
+    div_honorarios_minimos.empty()
+    for hm in honorarios_minimos_distancia
+      checkbox = $("""
+        <tr>
+          <td><input type="checkbox" name="honorario_minimos" value="#{hm.concepto}" data-concepto="#{hm.concepto}" data-porcentaje="#{hm.porcentaje_concepto}"></td>
+          <td>#{hm.concepto}</td>
+          <td>#{hm.porcentaje_concepto}</td>""")
+
+      checkbox.on 'change', (evt) =>
+        @calcularCostoEstimadoProyectoExtUrb()
+
+      div_honorarios_minimos.append checkbox
+      console.log checkbox
+
+  crearSelectHonorarios: (data) =>
+    honorarios_minimos = $('#selector_honorario')
+    honorarios_minimos.empty()
+    option = $("""
+        <option></option>""")
+    honorarios_minimos.append option
+    for hm in data
+      option = $("""
+        <option>#{hm.concepto}</option>""")
+      honorarios_minimos.append option
+
+  honorarioPorRepeticion: (cantidad_repeticiones) =>
+   
+    if cantidad_repeticiones == 1
+      0.60
+    else if cantidad_repeticiones == 2
+      1.10
+    else if cantidad_repeticiones == 3
+      1.50
+    else if cantidad_repeticiones == 4
+      1.80
+    else if cantidad_repeticiones == 5
+      2.00
+    else if cantidad_repeticiones == 6
+      2.10
+    else if cantidad_repeticiones > 6
+      ((cantidad_repeticiones - 6) * 0.10 ) + 2.10
+     
+  eventoGuardarVisado: (evt) =>
+    if @verificarDatosFormulario()
+      @guardarVisado()
+    else
+      alert('Llene los campos antes de guardar')
+
+  verificarDatosFormulario: () =>
+    console.log 'Voy a verificar datos!'
+    true
+
+  guardarVisado: () =>
+    visado =
+      visado:
+        obra_id: @obra_id
+        area_bruta: @area_bruta.val()
+        tipo: @selector_tipo_visado.val()
+        complejidad: @indice_complejidad.indice_complejidad
+        costo_construccion_estimado: @costo_construccion_estimado
+        costo_estimado_proyecto: @costo_estimado_proyecto
+        costo_completo: @costo_completo
+        es_repeticion: @es_repeticion_checkbox.prop("checked")
+        cantidad_repeticiones: @cantidad_repeticiones_input.val()
+        costo_completo_repeticion: @costo_completo_repeticion
+        arancel: @arancel_visado_input.val()
+        costo_construccion: @costo_construccion
+        porcentaje_tabla_datos: @porcentaje_tabla_datos
+
+    $.ajax @visados_url,
+      type: 'POST'
+      data: visado
+      dataType: 'json'
+      error: (jqXHR, textStatus, errorThrown) ->
+        console.log "Falle "
+      success: (data, textStatus, jqXHR) =>
+        swal
+          type: 'success'
+          title: 'Guardado exitoso'
+          () -> 
+            window.location.reload() 
+
+
+   limpiarFormulario: () =>
+    @selector_tipo_visado.val("")
+    @selector_de_uso_container.val("")
+    @selector_de_uso.val("")
+    @area_bruta.val("")
+    @costo_estimado_proyecto_input.val("") 
+    $('.cantidad_repeticion').hide()
+    @es_repeticion_checkbox.prop('checked', false)
+    @cantidad_repeticiones_input.val("")
+    @arancel_visado_input.val("")
+    @complejidades.val("")
+    @resultado.val("")
+    @resultado_estimado.val("") 
+    @total.val("")
+    $('.proyantep').hide()
+    $('.exturb').hide()
+
+$ ()->
+  VisadoObrasHelper.tratarDeEnlazar()

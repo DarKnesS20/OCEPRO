@@ -1,0 +1,148 @@
+
+<div class="col-md-12">
+<%if @obra.may_pagar? && policy(@obra).pagar? %>
+    <span class="pull-right">&nbsp</span>
+    <span><%= button_to  pagar_obra_path(@obra), class: "btn btn-success btn-sm pull-right" do%>
+      <span class="fa fa-dollar" style="color:white"></span> Pagar <% end %>
+    </span>
+  <%end # end if%>
+  <%if @obra.may_rechazar? && policy(@obra).rechazar? %>
+    <span class="pull-right">&nbsp</span>
+    <span><%= button_to  rechazar_obra_path(@obra), class: "btn btn-danger btn-sm pull-right" do%>
+      <span class="fa fa-times" style="color:white"></span> Rechazar <% end %>
+    </span>
+  <%end # end if%>
+  <%if @obra.may_visar? && policy(@obra).visar? && @obra.n_oceprone.present? %>
+    <span class="pull-right">&nbsp</span>
+    <span><%= button_to  visar_obra_path(@obra), class: "btn btn-success btn-sm pull-right" do%>
+      <span class="fa fa-check" style="color:white"></span> Procesar  <% end %>
+    </span>
+  <%end # end if%>
+  <% if policy(Visado).create? && (@obra.pendiente? || @obra.en_proceso?) %>
+  <span class="pull-right">&nbsp</span>
+    <button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal" data-target="#newVisado">
+      <span class="fa fa-plus"></span> Visado
+    </button>
+  <%end%>
+  <%if @obra.may_aprobar_obra? %>
+    <span class="pull-right">&nbsp</span>
+    <span><%= button_to  aprobar_obra_obra_path(@obra), class: "btn btn-success btn-sm pull-right" do%>
+      <span class="fa fa-check" style="color:white"></span> Aprobar  <% end %>
+    </span>
+  <%end # end if%>
+  
+  <%if @obra.creado? && current_usuario.agremiado? %>
+  <span class="pull-right">&nbsp</span>
+  <span><%= link_to  edit_obra_path(@obra), class: "btn btn-success btn-sm pull-right" do%>
+    <span class="fa fa-pencil" style="color:white"></span>  <%end%>
+  </span>
+  <%end %>
+  <% if current_usuario.operador? || current_usuario.system? || current_usuario.admin?%>
+  <span class="pull-right">&nbsp</span>
+  <span><%= link_to  obra_path(@obra, format: "pdf"), class: "btn btn-success btn-sm pull-right" do%>
+    <span class="fa fa-download" style="color:white"></span>  
+  <% end %>
+  </span>
+  <%end%>
+  <span class="pull-right">&nbsp</span>
+  <span><%= link_to  readpdf_obra_path(@obra), class: "btn btn-danger btn-sm pull-right" do%>
+    <span class="fa fa-file-pdf-o" style="color:white"></span>  
+  <% end %>
+  </span>
+  
+  
+  <div class="col-md-<%if current_usuario.agremiado?%>12<%else%>3<%end%>">
+
+  <h3>DETALLES</h3>
+  <strong>OBRA:</strong> <%= @obra.nombre.upcase %><br/>
+  <strong>DIRECCIÓN:</strong> <%= @obra.direccion_obra.upcase %><br/>
+  <strong>MUNICIPIO:</strong> <%= @obra.municipio_obra.upcase %><br/>
+  <strong>PROPIETARIO:</strong> <%= @obra.propietario_parcela_nombre.upcase %><br/>
+  <h2><span class="small">VERIFICACIÓN NORMATIVA</span></h2>
+  <strong>TIPO DE VISADO:</strong> <%= @obra.tipo_obra.upcase %><br/>
+  <strong>ÁREA DE PARCELA Mts2:</strong> <%= number_with_delimiter(@obra.area_parcela,delimiter: ".", separator: ",") %><br/>
+  <strong>ÁREA BRUTA DE CONSTRUCCIÓN Mts2:</strong> <%= number_with_delimiter(@obra.area_bruta_construccion,delimiter: ".", separator: ",") %><br/>
+  <strong>ÁREA NETA DE CONSTRUCCIÓN Mts2:</strong> <%= number_with_delimiter(@obra.area_neta_construccion,delimiter: ".", separator: ",") %><br/>
+  <% if current_usuario.operador? || current_usuario.system? || current_usuario.admin? %>
+    <%= form_for @obra, url: oceprone_obra_path(@obra), method: 'post', html: {:class => 'form-inline ocepro-form '} do |f| %>
+    <div class="form-group registro-oceprone-helper" data-by-obras-url="<%= validar_oceprone_obras_path(format: :json)%>">
+    <label for="numero_ocepro" >N° OCEPRO:</label>
+    <input minlength = "5" type="number" id="numero_ocepro" name="obra[n_oceprone]" class="form-control" value="<%=number_with_delimiter(@obra.n_oceprone, delimiter: ".", separator: ",") %>" <%if @obra.n_oceprone.present? %> disabled<%end%> required>
+      <% if not @obra.n_oceprone.present? %>
+      <button type="submit" class="btn btn-success btn-sm pull-right" id="boton_oceprone" style="color:white" required>
+        <span class="fa fa-floppy-o"></span>
+      </button>
+      <%end%>
+    </div>
+    <% end  # form end%>
+  <%else%>
+  <strong>N° OCEPRO:</strong> <%= number_with_delimiter(@obra.n_oceprone, delimiter: ".", separator: ",") %><br/>
+  <%if @obra.comentario.present? %>
+  <strong>Comentario:</strong> <%= @obra.comentario %><br/>
+  <%end%>
+  <%end  # if end%>
+
+  </div>
+  
+  <div class="col-md-9">
+  <%if @obra.visados.size > 0 %>
+  <h3>VISADOS</h3>
+  <table class="col-md-12 text-center table table-striped table-hover">
+    <thead>
+      <tr>
+        <th class="text-center">Tipo</th>
+        <th class="text-center">Área bruta Mts2 </th>
+        <th class="text-center">Árancel</th>
+        <th class="text-center">Creado Por</th>
+        <% if policy(Visado).create? && (@obra.pendiente? || @obra.en_proceso?)  %>
+        <th></th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody>
+      <center>
+        <% @obra.visados.each do |visado| %>
+          <tr>
+          <td><%= visado.tipo %></td>
+          <td><%= number_with_delimiter(visado.area_bruta, delimiter: ".", separator: ",") %></td>
+          <td><%= number_to_currency(visado.arancel, unit: "BsF  ", delimiter: ".", separator: ",")%></td>
+          <td><%= visado.created_by.nombres%> <%= visado.created_by.apellidos%></td>
+          <% if policy(Visado).create? && (@obra.pendiente? || @obra.en_proceso?) %>
+          <td>
+
+            <%= link_to '', obra_visado_path(@obra,visado), class:'btn btn-danger fa fa-trash', style: 'color:white' , method: :delete, data: { confirm: 'Esta seguro?' } %></td><% end %>
+          </tr>
+        <% end %>
+      </center>
+    </tbody>
+    <tfoot>
+    <tr>
+    <td colspan="2"><strong>Total a pagar:</strong></td>
+    <td><%=  number_to_currency(@obra.visados.sum(:arancel), unit: "BsF  ", delimiter: ".", separator: ",") %></td>
+    </tr>
+    </tfoot>
+  </table>
+  <%end%>
+   
+
+  <%if !current_usuario.agremiado? %>
+  <%= form_for @obra , html: {:class => 'form-inline'} do |f| %>
+  <div class="form-group ">
+    <textarea required placeholder="Comentario." type="number" id="comentario_obra" style = "resize: none; margin: 0px; width: 400px; height: 50px" maxlength="50" class="form-control"<%if @obra.comentario.present? || current_usuario.agremiado? %> disabled <%end%>><%= @obra.comentario %></textarea>
+    <% if not @obra.comentario.present? %>
+      <% if current_usuario.operador? || current_usuario.system? || current_usuario.admin? %>
+    <button type="button" class="btn btn-primary btn-sm pull-right" id="boton_comentario" style="color:white" required>
+      Comentar
+    </button>
+    <%end%>
+    <%end%>
+  </div>
+  <% end %>
+  <%end%>
+</div>
+  
+</div>
+<% if policy(Visado).create? %>
+<%= render partial:'nuevo_visado_modal' %>
+<%end%>

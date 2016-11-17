@@ -1,0 +1,32 @@
+<div class="pull-right"> <%= link_to '', new_costos_civ_path, class:'btn btn-primary fa fa-plus', style: 'color:white' %>
+</div>
+
+<h3>VALOR UNIDAD C.I.V</h3>
+
+<table class="col-md-12 text-center table table-striped table-hover">
+  <thead>
+    <tr>
+      <th class="text-center">Valor unidad C.I.V</th>
+      <th class="text-center">Fecha de creación</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <center>
+      <% @costos_civs.each do |costos_civs| %>
+        <tr>
+          <td><%= number_to_currency(costos_civs.civ, unit:"BsF  ", delimiter: ".", separator: ",") %></td>
+          <td><%= ltz(costos_civs.created_at)%> </td>
+          <!--<td><%= link_to '', edit_costos_civ_path(costos_civs), class:'btn btn-success fa fa-pencil',style: 'color:white' %>-->
+        </tr>
+      <% end %>
+    </center>  
+  </tbody>
+</table> 
+
+
+
+
+
+
+

@@ -1,0 +1,112 @@
+<div class="collapse navbar-collapse navbar-ex1-collapse" data-no-turbolink>
+    <ul class="nav navbar-nav side-nav">
+        <% if policy(Obra).index? %>
+        <li class="<%= 'active' if current_page?(obras_path) %>" >
+            <a href="/obras"><i class="fa fa-fw fa-book"></i> Obras</a>
+        </li>
+        <% end %>
+        <% if policy(Usuario).index? %>
+            <li class="<%= 'active' if current_page?(usuarios_path) %>">
+                <a href="/usuarios" class="fa fa-user-plus"> Usuarios</a>
+            </li>
+        <% end %>
+        <% if current_usuario.system? || current_usuario.admin? %>
+        <li  class="<%= 'active' if current_page?(visados_path) %>" >
+            <a href="<%= aranceles_obras_path %>"><i class="fa fa-fw fa-dollar"></i> Aranceles</a>
+        </li>
+        <%end%>
+        <%if current_usuario.system? || current_usuario.admin? %>
+        <li>
+            <a href="javascript:;" data-toggle="collapse" data-target="#charts"><i class="fa fa-fw fa-calculator"></i> Estadísticas <i class="fa fa-fw fa-caret-down"></i></a>
+            <ul id="charts" class="collapse">
+                <li>
+                    <a href="<%= regresion_lineal_obras_path %>"><i class="fa fa-fw fa-line-chart"> </i> Crecimiento</a>
+                </li>
+                 <li>
+                    <a href="<%= estadisticas_obras_path %>"><i class="fa fa-fw fa-bar-chart-o "> </i> Gráficos</a>
+                </li>
+                <li>
+                    <a href="<%= estadistica_aplicada_obras_path %>"><i class="fa fa-fw fa-search "> </i> Ánalisis Estadístico</a>
+                </li>
+            </ul>
+        </li>
+        <%end%>
+        <%if  current_usuario.system? || current_usuario.admin? || current_usuario.operador? %>
+        <li>
+            <a href="javascript:;" data-toggle="collapse" data-target="#dataload"><i class="fa fa-fw fa-database"></i> Datos <i class="fa fa-fw fa-caret-down"></i></a>
+            <ul id="dataload" class="<%= (current_page?(honorario_minimos_path) ||
+                current_page?(area_exteriores_path) || current_page?(costos_path) || 
+                current_page?(indice_costos_uso_cats_path) ) ? 'collapse in' : 'collapse' %> "  >
+                <%if current_usuario.system? || current_usuario.admin? || current_usuario.operador?%>
+                <li class="<%= 'active2' if current_page?(honorario_minimos_path) %>">
+                    <a href="/honorario_minimos">Honorarios mínimo</a>
+                </li>
+                <%end%>
+                <%if current_usuario.system? || current_usuario.admin? || current_usuario.operador?%>
+                <li class="<%= 'active2' if current_page?(area_exteriores_path) %>">
+                    <a href="/area_exteriores">Áreas externas</a>
+                </li>
+                <%end%>
+                <%if current_usuario.system? || current_usuario.admin?|| current_usuario.operador? %>
+                <li class="<%= 'active2' if current_page?(costos_path) %>">
+                    <a href="/costos">BsF/Medida</a>
+                </li>
+                <%end%>
+                <%if current_usuario.system?|| current_usuario.admin?|| current_usuario.operador?%>
+                <li class="<%= 'active2' if current_page?(indice_costos_uso_cats_path) %>">
+                    <a href="/indice_costos_uso_cats">Uso por categoría</a>
+                </li>
+                <%end%>
+                <%if current_usuario.system?|| current_usuario.admin?|| current_usuario.operador?%>
+                <li class="<%= 'active2' if current_page?(costos_civs_path) %>">
+                    <a href="/costos_civs">U. C.I.V</a>
+                </li>
+                <%end%>
+            </ul>
+        </li>
+        <%end%>
+        <%if current_usuario.system?%>
+        <li>
+            <a href="javascript:;" data-toggle="collapse" data-target="#backup"><i class="fa fa-fw fa-database"></i> Respaldos <i class="fa fa-fw fa-caret-down"></i></a>
+            <ul id="backup" class="collapse">
+                <li>
+                    <a id="respaldo" src="/db_backup_restore/backup.json">Respaldo</a>
+                </li>
+                <li>
+                    <a id="restaurar">Restaurar</a>
+                </li>
+
+            </ul>
+        </li>
+        <%end%>
+        <%if current_usuario.agremiado?%>
+        <li>
+            <a href="<%= manual_path%>"><i class="fa fa-fw fa-info"></i> Ayuda</a>
+        </li>
+        <%end%>
+         <%if current_usuario.operador?%>
+         <li>
+            <a href="<%= pasantes_path%>"><i class="fa fa-fw fa-info"></i> Ayuda</a>
+        </li>
+        <%end%>
+         <%if current_usuario.admin?%>
+         <li>
+            <a href="<%= irene_path%>"><i class="fa fa-fw fa-info"></i> Ayuda</a>
+        </li>
+        <%end%>
+        <%if current_usuario.system?%>
+        <li>
+            <a href="<%= junta_path%>"><i class="fa fa-fw fa-info"></i> Ayuda</a>
+        </li>
+        <%end%>
+        <%if current_usuario.system?%>
+        <li>
+            <a href="<%= codigo_path%>"><i class="fa fa-fw fa-info"></i> Codigo</a>
+        </li>
+        <%end%>
+        <li>
+            <a href="<%= acerca_de_index_path%>"><i class="fa fa-fw fa-search"></i> Acerca de</a>
+        </li>
+    </ul>
+</div>
+

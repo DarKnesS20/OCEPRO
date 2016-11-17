@@ -1,0 +1,31 @@
+<div class="pull-right"> <%= link_to '', new_indice_costos_uso_cat_path, class:'btn btn-primary fa fa-plus', style: 'color:white' %>
+</div>
+<h3>ÍNDICE POR CATEGORIAS</h3><br>
+
+<table class="col-md-12 text-center table table-striped table-hover">
+  <thead>
+    <%= hidden_field_tag :direction, params[:direction]%>
+    <%= hidden_field_tag :sort, params[:sort]%>
+     <tr>
+      <th class="text-center">Uso Vivienda <%= sortable(:vivienda_uso) %></th>
+      <th class="text-center">Índice Complejidad <%= sortable(:indice_complejidad) %></th>
+      <th class="text-center">Índice Costo <%= sortable(:indice_costo) %></th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @indice_costos_uso_cats.each do |indice_costos_uso_cat| %>
+      <tr>
+        <td><%= indice_costos_uso_cat.vivienda_uso.upcase %></td>
+        <td><%= number_to_percentage(indice_costos_uso_cat.indice_complejidad, precision: 2, separator: ",") %></td>
+        <td><%=number_to_currency(indice_costos_uso_cat.indice_costo, unit:"BsF  ", delimiter: ".", separator: ",") %></td>
+
+        
+        <td><%= link_to '', edit_indice_costos_uso_cat_path(indice_costos_uso_cat), class:'btn btn-success fa fa-pencil', style: 'color:white'%></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

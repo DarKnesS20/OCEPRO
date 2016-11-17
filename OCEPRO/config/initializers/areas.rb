@@ -1,0 +1,4 @@
+AREAS = [
+'EXTERIORES',
+'URBANISMO',
+]

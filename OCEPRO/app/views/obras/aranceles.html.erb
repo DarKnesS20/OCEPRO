@@ -1,0 +1,80 @@
+ 
+<h3>RECAUDADO</h3>
+<div class="col-md-12 ">
+
+
+<%= form_tag(aranceles_obras_path, method: :get, id: 'obras-filter') do %>
+
+<table class="text-center table table-striped table-hover">
+  <thead>
+    <tr>
+      <td colspan="2"><%= text_field_tag(:usuario_civ, @obras_params[:usuario_civ],
+      placeholder: 'C.I.V Agremiado',
+      class: 'form-control',  form: 'obras-filter') %></td>
+      <td><%= text_field_tag(:desde, @obras_params[:desde],
+          placeholder: 'Desde',
+          class: 'form-control bootstrap-datetimepicker',  form: 'obras-filter') %></td>
+      <td><%= text_field_tag(:hasta, @obras_params[:hasta],
+          placeholder: 'Hasta',
+          class: 'form-control bootstrap-datetimepicker', form: 'obras-filter') %></td>
+      <td><%= submit_tag('Filtrar', class: 'btn btn-primary btn-sm', form: 'obras-filter') %></td>
+
+    </tr>
+    <tr>
+      <th class="text-center">Nombre Agremiado</th>
+      <th class="text-center">C.I.V</th>
+      <th class="text-center">Anteproyectos </th>
+      <th class="text-center">Proyectos </th>
+      <th class="text-center">Total pagado </th>
+    </tr>
+    
+  </thead>
+
+  <tbody>
+
+    <% @obras.each do |obra| %>
+      <tr>
+        <td><%= obra.coordinador_proyecto.nombres.capitalize %> <%= obra.coordinador_proyecto.apellidos.capitalize %></td>
+        <td><%= number_to_currency(obra.coordinador_proyecto.civ, unit: " ", delimiter: ".", precision: 0)%></td>
+        <td><%= obra[:anteproyectos] %> </td>
+        <td><%= obra[:proyectos]%> </td>
+        <td><%=  number_to_currency(obra[:arancel], unit: "BsF  ", delimiter: ".", precision: 2, separator: ",")%></td> 
+     
+      </tr>
+    <% end %>
+    
+  </tbody>
+
+</table>
+  <center>
+    <strong> TOTAL ARANCELES:  <%= number_to_currency(@total, unit: "BsF  ", delimiter: ".", precision: 2, separator: ",") %> </strong>
+  </center>
+
+<% end %>
+</div>
+
+
+<script>
+$('#date-expand').click(function(){
+  $('#date-filter').toggle();
+});
+
+if ($('#desde').val()!='' ||$('#hasta').val()!=''){
+  $('#date-filter').show();
+}
+
+
+$(document).ready(function(){
+  var dateTimePickerOptions = {
+    format: 'YYYY-MM-DD',
+    stepping: 1,
+    //useCurrent: false,
+    sideBySide: true,
+    showClear: true,
+    showClose: true,
+    showTodayButton: true,
+  };
+  $('.bootstrap-datetimepicker').datetimepicker(dateTimePickerOptions);
+});
+
+</script>

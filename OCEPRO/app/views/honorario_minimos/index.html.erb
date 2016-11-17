@@ -1,0 +1,39 @@
+<div style="float:right"> <%= link_to '', new_honorario_minimo_path, class:'btn btn-primary fa fa-plus', style: 'color:white' %>
+</div>
+
+<h3>HONORARIOS MÍNIMOS</h3><br>
+<%= form_tag(honorario_minimos_path, method: :get, id: 'honorarios-filter') do %>
+
+<table class="col-md-6 text-center table table-striped table-hover">
+  <thead>
+    <%= hidden_field_tag :direction, params[:direction], form: 'honorarios-filter' %>
+    <%= hidden_field_tag :sort, params[:sort], form: 'honorarios-filter' %>
+    <tr >
+      <td align="center" ><strong>Tipo de Visado  <%= sortable(:tipo_visado) %></strong></td>
+      <td align="center" ><strong>Concepto <%= sortable(:concepto) %></strong></td>
+      <td align="center" ><strong>Desde<%= sortable(:desde) %></strong></td>
+      <td align="center" ><strong>Hasta<%= sortable(:hasta) %></strong></td>
+      <td align="center" ><strong>Porcentaje<%= sortable(:porcentaje) %></strong></td>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @honorario_minimos.each do |honorario_minimo| %>
+      <tr>
+        <td><%= honorario_minimo.tipo_visado %></td>
+        <td><%= honorario_minimo.concepto.upcase %></td>
+        <td><%= number_to_currency(honorario_minimo.desde, unit: "BsF  ", precision: 2, delimiter: ".", separator: ",")%></td>
+        <td><%= number_to_currency(honorario_minimo.hasta, unit: "BsF  ", precision: 2, delimiter: ".", separator: ",")%></td>
+        <td><%= number_to_percentage(honorario_minimo.porcentaje, precision: 2, separator: ",") %></td>
+
+
+        <td><%= link_to '', edit_honorario_minimo_path(honorario_minimo), class:'btn btn-success fa fa-pencil', style: 'color:white' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%end%>
+
+<br>
+
+

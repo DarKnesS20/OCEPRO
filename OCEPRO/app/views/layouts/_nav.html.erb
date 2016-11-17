@@ -1,0 +1,34 @@
+
+<div  height="100px" width="100%" style="background-color: white;">
+<%= image_tag "logo2.png",  height: '100' %>
+<%= image_tag "junta.jpg",  height: '100', align: "right"%>
+<img src="/assents/junta.jpg" align="right">
+</div>
+
+
+
+
+<!-- Navigation bar -->
+<div class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
+<div  class="banner">
+
+</div>
+  <div class="container">
+    <div class="navbar-header">
+      <%= render 'layouts/nav_header' %>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <%= render(partial: 'layouts/nav_main') %>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <%= render 'layouts/nav_user' %>
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+

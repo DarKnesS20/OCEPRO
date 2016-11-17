@@ -1,0 +1,73 @@
+.bg-img {
+  background-image: image-url('/assets/photo_bg.jpg');
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-attachment: fixed;
+  background-position: center; 
+
+}
+
+
+.log-status.wrong-entry .form-control{
+  border-color: #ed1c24;
+  color: #ed1c24;
+}
+
+
+
+
+#error_explanation {
+  color: red;
+  ul {
+    color: red;
+    list-style: none;
+    margin: 0 0 18px 0;
+  }
+}
+
+.field_with_errors {
+  @extend .has-error;
+  .form-control {
+    color: black;
+  }
+}
+
+.error {
+  font-size: 10;
+  color: red;
+}
+
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
+.active2{
+    background-color: #edbe1a;
+}
+.active2 > a {
+  color: #000;
+}
+
+.pollito{
+  font-size: 9px;
+
+}
+
+.pollito1{
+  font-size: 9px;
+
+}
+.text-avg{
+  font-size: 11px;
+
+}
+

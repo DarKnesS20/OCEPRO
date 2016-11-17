@@ -1,0 +1,81 @@
+
+es:
+  activerecord:
+    models:
+      obra:
+        one: Obra
+        other: Obras
+    errors:
+        models:
+            usuario:
+                attributes:
+                    email: 
+                        taken: Este correo ya está registrado en el sistema
+                    password:
+                        blank: La contraseña no puede ser vacia
+                        too_short: La contraseña es muy corta
+
+    attributes:
+      obra:
+        nombre: Obra denominada
+        propietario_parcela_nombre: Propietario
+        propietario_parcela_ci: CI/RIF Propietario
+        coordinador_proyecto: Coordinador del proyecto 
+        residente_obra_nombre: Prof. residente de obra 
+        residente_obra_civ: C.I.V Residente de obra 
+        direccion_obra:  Ubicada en
+        municipio_obra: Municipio 
+        uso_obra: Construcción destinada a USO
+        memoria_descriptiva: Memoria descriptiva
+        n_oceprone: O.C.P.N°
+        area_parcela: Área de la parcela 
+        area_bruta_construccion: Área bruta de construcción
+        area_neta_construccion: Área neta de construcción
+        status: Status
+  time:
+    formats:
+      default: "%Y-%m-%d %H:%M:%S %:z"
+      native: "%d de %B, %Y. %H:%M"
+      standard: "%d/%m/%Y %H:%M"
+      standard_date: '%d/%m/%Y'
+      tiny: "%H:%M"
+      filename: "%Y%m%d%H%M%S"
+      short: "%d/%m %H:%M"
+      short_date: '%y-%m-%d'
+      tiny_date: ! "%d de %B"
+      lang_default_date: "%d de %B, %Y"
+      draft: "%d/%m/%Y"
+      filename_date: "%d-%m-%Y"
+      date_filename: "%d-%m-%Y"
+      iso8601: "%Y-%m-%dT%H:%M:%S%:z"
+      iso8601_date: '%Y-%m-%d'
+      iso8601_hms: '%H:%M:%S'
+      iso8601_date_hm: '%Y-%m-%d %H:%M'
+      iso8601_date_hms: '%Y-%m-%d %H:%M:%S'
+      native_date: "%d de %B"
+  date:
+    formats:
+      default: "%Y-%m-%d"
+      filename: "%d-%m-%Y"
+      draft: "%d/%m/%Y"
+      lang_default: "%d de %B, %Y"
+      standard: "%d de %B, %Y"
+      long: ! '%d de %B de %Y'
+      short: ! '%d de %b'
+      tiny: ! "%d de %B"
+      files: "%Y%m%d"  
+
+  shared:
+    status_obra:
+      creado: CREADO
+      pendiente: PENDIENTE
+      en_proceso: EN PROCESO
+      visado: POR PAGAR
+      pagado: VISADO
+      rechazado: RECHAZADO 
+
+    tipo_usuarios:
+      system: MASTER
+      admin: SUPERVISOR
+      operador: OPERADOR
+      agremiado: AGREMIADO

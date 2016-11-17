@@ -1,0 +1,47 @@
+
+<div class="container">
+
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <div class="login-panel panel panel-default">
+        <div class="panel-body well">
+          <div class="form-group text-center">
+          <%=  image_tag("logo12.png", alt: "CIENE") %>
+          </div>
+          <fieldset>
+              <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+              <legend class="text-center">Iniciar sesión</legend>
+              <div class="form-group">
+                <%= f.text_field :usuario, placeholder: 'Usuario', autofocus: true, class: 'form-control', autocomplete: "off" %>
+              </div>
+              <div class="form-group log-status">
+                <%= f.password_field :password, autocomplete: "off", placeholder: 'Contraseña', class: 'form-control' %>
+                <span class="alert error"><%= alert %></span>
+              </div>
+
+              <%= render "usuarios/shared/links" %>
+
+              <%= f.submit "Entrar", class: 'btn btn-lg btn-primary btn-block' %>
+              <% end %>
+          </fieldset>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if alert.present? %>
+<script >
+  
+$('.log-status').addClass('wrong-entry');
+$('.alert').fadeIn(500);
+setTimeout( "$('.alert').fadeOut(1500);",3000 );
+setTimeout( "$('.log-status').removeClass('wrong-entry');",3000 );
+
+</script>
+
+<% end %>
+   
+
+

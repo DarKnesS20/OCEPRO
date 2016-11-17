@@ -1,0 +1,38 @@
+<div>
+<center>
+	<h3>
+		ESTADÍSTICAS DE OBRAS POR MUNICIPIO
+	</h3>
+</center>
+<DIV>
+	<CENTER>	
+		<%= column_chart @obras_mun,  label: 'Obras Por Este Municipio'%>
+	</CENTER>
+</DIV>
+
+
+<center>
+	<h3>
+		INGRESOS MENSUALES POR VISADO
+	</h3>
+</center>
+
+<DIV>
+	<CENTER>	
+		<%= line_chart(@ingresos.each_with_object({}) { |(key, value), hash| hash[key] = value.round(2)},  label: 'Acumulativo de Aranceles Para Este Mes BsF')%>
+	</CENTER>
+</DIV>
+
+<center>
+	<h3>
+		INGRESOS ANUALES POR VISADO
+	</h3>
+</center>
+
+<DIV>
+	<CENTER>	
+		<%= line_chart(@ingresos2.each_with_object({}) { |(key, value), hash| hash[key] = value.round(2) },  label: 'Acumulativo de Aranceles Para Este Año BsF')%>
+	</CENTER>
+</DIV>
+
+</div>

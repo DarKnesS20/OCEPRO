@@ -1,0 +1,48 @@
+<%= form_for(@indice_costos_uso_cat) do |f| %>
+  <% if @indice_costos_uso_cat.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@indice_costos_uso_cat.errors.count, "error") %> prohibited this indice_costos_uso_cat from being saved:</h2>
+
+      <ul>
+      <% @indice_costos_uso_cat.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+   <div class="col-md-6 col-md-offset-3">
+      <div class="form-group">
+        <%= f.label :vivienda_uso %><br />
+        <%= f.text_field :vivienda_uso,  class: 'form-control', :required => true%>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :indice_complejidad ,"Índice complejidad %"%><br />
+        <%= f.number_field :indice_complejidad,  class: 'form-control', :step => 'any', :required => true%>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :indice_costo ,"Índice costo Bs.F"%><br />
+        <%= f.number_field :indice_costo,  class: 'form-control', :required => true %>
+      </div>
+  </div>
+
+    <center>
+      <div class="actions col-md-12">
+        <%= f.submit 'Aceptar', class: 'btn btn-primary' %>
+      </div>
+      <% end %>
+    </center>
+
+<script>
+  
+$( "#new_indice_costos_uso_cat").validate({
+  rules: {
+    field: {
+      required: true
+    }
+  }
+});
+
+</script>

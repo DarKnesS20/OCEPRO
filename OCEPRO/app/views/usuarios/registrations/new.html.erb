@@ -1,0 +1,86 @@
+<div class="col-lg-12">
+<h3 class="page-header">REGISTRO DE USUARIO</h3>
+</div>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: {class: "test"})  do |f| %>
+
+  <%= devise_error_messages! %>
+<div class="well col-md-12 registro-usuario-helper" 
+  data-by-usuario-url="<%= validar_usuario_usuarios_path(format: :json)%>"
+  data-by-mail-url="<%= validar_mail_usuarios_path(format: :json)%>"
+  data-by-ci-url="<%= validar_ci_usuarios_path(format: :json)%>"
+  data-by-civ-url="<%= validar_civ_usuarios_path(format: :json)%>"
+   >
+  <div class="col-md-6 ">
+
+    <div class="form-group">
+      <%= f.label :usuario , class: "control-label" %><br />
+      <%= f.text_field :usuario, autofocus: true, class: "form-control", :required => true, id: "input_usuario", :maxlength => "6" %>
+
+    </div>
+    <div class="form-group">  
+      <div class="row"> 
+      <div class="col-sm-4" >
+        <%= f.label :role, "Tipo de usuario" %><br>
+        <%= f.select :role, Usuario.roles.map {|r, i| [ t("shared.tipo_usuarios.#{r}"), r] if i > Usuario.roles[current_usuario.role] }.compact, {},{class: "form-control role"} %>
+      </div>
+      <div class="col-sm-8">
+        <div id="identidad">
+        <%= f.label :civ, "C.I.V", class: "control-label"  %><br />
+        <%= f.number_field :civ, class: "form-control identificador", :required => true, :maxlength => "6", :minlength => "5"%>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="form-group ">
+      <%= f.label :nombres, "Nombre", class: "control-label"  %><br />
+      <%= f.text_field :nombres, class: "form-control", :required => true,:pattern => '[A-Za-z]+' %>
+    </div>
+
+    <div class="form-group ">
+      <%= f.label :apellidos, "Apellido", class: "control-label"  %><br />
+      <%= f.text_field :apellidos, class: "form-control", :required => true,:pattern => '[A-Za-z]+' %>
+    </div>
+  </div>
+  <div class="col-md-6 ">
+    <div class="form-group ">
+      <%= f.label :cedula, "Cédula", class: "control-label" %><br />
+      <div class="col-sm-3" style="padding:0">
+      <%= f.select :tipo_ci_coordinador, TIPO_CI_RESIDENTE, {},{class: "form-control tipo-ci"} %>
+      </div>
+      <div class="col-sm-9" style="padding-right:0">
+      <%= f.number_field :cedula, class: "form-control", :minlength => "7", :maxlength => "8", :required => true, id: "cedula"%>
+      </div>
+    </div><br>
+    <br>
+    <div class="form-group ">
+      <%= f.label :email, 'Correo' %><br />
+      <%= f.email_field :email, class: "form-control", :required => true %>
+    </div>
+      
+    <div class="form-group">
+      <%= f.label :password, "Contraseña", class: "hidden"%>
+      <% if @validatable %>
+      <em>(<%= @minimum_password_length %> characters minimum)</em>
+      <% end %><br />
+      <%= f.password_field :password, autocomplete: "off" , class: "form-control hidden", :maxlength=>"16",  :minlength=>"6", :required => true, value: "12345679" %>
+    </div>
+    <div class="form-group">
+      <%= f.label :password_confirmation, "Confirmar contraseña", class: "hidden" %><br />
+      <%= f.password_field :password_confirmation, autocomplete: "off" , class: "form-control hidden", :maxlength=>"16",  :minlength=>"6", :required => true, value: ':12345679'%>
+    </div>  
+  </div>
+</div>
+
+
+<center>
+  <div class="actions col-md-12">
+    <%= f.submit "Registrar", class:'btn btn-primary', id: "registrar_usuario" %>
+  </div>
+</center>
+</div>
+<% end %>
+<%= render "usuarios/shared/links" %>
+<script>
+  $.validator.messages.pattern = 'Solo se admite letras';
+</script>

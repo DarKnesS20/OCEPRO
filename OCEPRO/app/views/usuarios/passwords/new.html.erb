@@ -1,0 +1,50 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <div class="login-panel panel panel-default">
+        <div class="panel-body well">
+        	<fieldset>
+			<legend class="text-center"><%= link_to "/usuarios/sign_in" do %>
+				<i class="fa fa-arrow-left" aria-hidden="true" style="padding:10px;margin-left:0px"></i>
+			<%end%>  RECUPERAR CLAVE</legend>
+			
+			<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+				  <div class="col-md-12">
+					  	<div class="form-group">
+					    <%= f.label :email , "Correo"%><br />
+					    <%= f.email_field :email, autofocus: true,  class: 'form-control', :required => true,autocomplete: "off"  %>
+					    <label id="error" class="error"  style="display:none;"></label>
+					  </div>
+				  </div>
+			<center>
+				  <div class="actions col-md-12">
+				    <%= f.submit "Enviar", class: 'btn btn-primary' ,id: "enviadoso"%>
+				  </div>
+				<% end %>
+			</center>
+
+		</fieldset>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+$( "#new_usuario").validate({
+  rules: {
+    field: {
+      required: true
+    }
+  }
+
+});
+<%if devise_error_messages!.present? %>
+	$("#error").append("El correo ingresado no existe")
+	$("#error").show()
+<%end%>
+
+</script>
+
+

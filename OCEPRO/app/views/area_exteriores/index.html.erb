@@ -1,0 +1,39 @@
+
+<div style="float:right"> <%= link_to '', new_area_exteriore_path, class:'btn btn-primary fa fa-plus', style: 'color:white' %>
+</div>
+
+<h3>ÁREAS EXTERIORES</h3><br>
+ 
+<table class="col-md-12 text-center table table-striped table-hover">
+
+  <thead>
+    <%= hidden_field_tag :direction, params[:direction]%>
+    <%= hidden_field_tag :sort, params[:sort]%>
+    <tr>
+      <th class="text-center">Tipo de Área<%= sortable(:tipo_area) %></th>
+      <th class="text-center">Concepto<%= sortable(:concepto) %></th>
+      <th class="text-center">Desde<%= sortable(:desde) %></th>
+      <th class="text-center">Hasta<%= sortable(:hasta) %> </th>
+      <th class="text-center">Porcentaje<%= sortable(:porcentaje_concepto) %></th>    
+    </tr>
+  </thead>
+
+  <tbody>
+ 
+    <center>
+    <% @area_exteriores.each do |area_exteriore| %>
+      <tr>
+        <td><%= area_exteriore.tipo_area%></td>
+        <td><%= area_exteriore.concepto.upcase %></td>
+        <td><%=number_with_delimiter(area_exteriore.desde, delimiter: ".", separator: ",") %></td> 
+        <td><%=number_with_delimiter(area_exteriore.hasta, delimiter: ".", separator: ",")%></td>
+        <td><%= number_to_percentage(area_exteriore.porcentaje_concepto, precision: 2, separator: ",") %></td>
+        <td><%= link_to '', edit_area_exteriore_path(area_exteriore), class:'btn btn-success fa fa-pencil', style: 'color:white' %></td>
+      </tr>
+    <% end %>
+    
+  </tbody>
+    </center>
+</table>
+
+<br>

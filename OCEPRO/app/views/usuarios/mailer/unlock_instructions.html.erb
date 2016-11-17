@@ -1,0 +1,7 @@
+<p>Hola <%= @resource.email %>!</p>
+
+<p>Tu cuenta ha sido bloqueda por ingreso de contrasenas erroneas sign in attempts.</p>
+
+<p>Clickea el siguente link para desbloquear tu cuenta:</p>
+
+<p><%= link_to 'Unlock my account', unlock_url(@resource, unlock_token: @token) %></p>

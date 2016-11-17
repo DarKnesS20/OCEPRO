@@ -1,0 +1,90 @@
+<%= render 'layouts/header' %>
+
+<%if usuario_signed_in? %>
+<body>
+<div  class="banner">
+<%= link_to "/" do %>
+    <%= image_tag "logo.png", height: '100', style: "padding:10px;margin-left:30px"%>
+<%end%>
+<%= image_tag "junta.png",  height: '120', align: "right", width: "86%" %>
+</div>
+<div id="wrapper" data-no-turbolink>
+    <%= render 'layouts/navbar' %>
+    
+    <div id="page-wrapper">
+        <div class="container-fluid" style="min-height:400px">
+        <%= render 'layouts/flash_messages' %>
+            <div class="row">
+            <!-- yield... -->
+            <%= yield %>
+            <!-- ...yield -->
+            </div>
+            <%= render 'layouts/footer' %>
+        </div>
+    </div>
+
+</div>
+</body>
+<% else %>
+<body class="bg-img">
+<div style="position:absolute;top:10px;width:100%">
+<%= render 'layouts/flash_messages' %>
+
+</div>
+    <div class="container-fluid" style="min-height:400px">
+    <%= yield %>
+    </div>
+
+</body>
+
+<% end %>     
+
+<% if flash.present? %>
+<script >
+setTimeout( "$('.alert').fadeOut(1500);",3000 );
+</script>
+<% end %>
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,54 @@
+<%= form_for @costo, :html => {:class => 'x'} do |f| %>
+  <% if @costo.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@costo.errors.count, "error") %> prohibited this costo from being saved:</h2>
+
+      <ul>
+      <% @costo.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+ <!-- <center>-->
+    <div class="col-md-6 col-md-offset-3">
+
+      <div class="form-group">
+          <%= f.label :descripcion ,"Descripción"%><br />
+          <%= f.text_field :descripcion,  class: 'form-control', :required => true%>
+      </div>
+
+      <div class="form-group">
+          <%= f.label :costos ,"Costos Bs.F"%><br />
+          <%= f.number_field :costos,  class: 'form-control', :required =>true%>
+      </div>
+
+      <div class="form-group">
+          <%= f.label :valido_desde %><br />
+          <%= f.date_field :valido_desde, class: 'form-control', :value => Time.now.strftime("%Y-%m-%d"), :required =>true, :min => Time.now %>
+      </div>
+      
+      <div class="form-group">
+          <%= f.label :valido_hasta %><br />
+          <%= f.date_field :valido_hasta, class: 'form-control' ,:value => Time.now.strftime("%Y-%m-%d") , :required =>true, :min => Time.now%>
+      </div>
+    </div>
+  <!--   </center> -->
+    
+    <center>
+      <div class="actions col-md-12">
+        <%= f.submit 'Aceptar',class: 'btn btn-primary' %>
+      </div>
+      <% end %>
+    </center>
+<script>
+  
+$( ".x" ).validate({
+  rules: {
+    field: {
+      required: true
+    }
+  }
+});
+
+</script>

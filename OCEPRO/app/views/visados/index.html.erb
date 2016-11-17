@@ -1,0 +1,111 @@
+
+<h3>VISADO</h3>
+
+<%= form_tag(visados_path, method: :get, id: 'visados-filter') do %>
+  <table class="col-md-12 text-center table table-striped table-hover">
+    <thead>
+    <tr>
+      <th></th>
+      <th  width="13%"><%= select_tag(:tipo,
+        options_for_select(TIPOS_VISADO, selected: @visados_params[:tipo]),
+        include_blank: 'Tipo',
+        class: 'form-control pollito', form: 'visados-filter')%></th>
+      <th width="10%"><%= text_field_tag(:nombres, @visados_params[:nombres],
+        placeholder: 'Agremiado',
+        class: 'form-control pollito',  form: 'visados-filter') %></th>
+
+      <th width="10%"><%= text_field_tag(:civ, @visados_params[:civ],
+      placeholder: 'C.I.V',
+      class: 'form-control pollito',  form: 'visados-filter') %></th>
+      <th></th>
+
+       <th width="14%">
+        <span class="col-md-10 pollito">Fecha</span> <span class="fa fa-caret-square-o-down" style="float:right; cursor:pointer" id="date-expand"></span>
+        <span class="col-md-12" style="float:left; display:none;" id="date-filter">
+
+          <%= text_field_tag(:desde, @visados_params[:desde],
+            placeholder: 'Fecha (desde)',
+            class: 'form-control bootstrap-datetimepicker pollito',  form: 'visados-filter') %>
+
+          <%= text_field_tag(:hasta, @visados_params[:hasta],
+            placeholder: 'Fecha (hasta)',
+            class: 'form-control bootstrap-datetimepicker pollito', form: 'visados-filter') %>
+        </span>
+
+      </th>
+      <th><%= submit_tag('Filtrar', class: 'btn btn-primary btn-sm', form: 'visados-filter') %></th>
+
+    </tr>
+
+      <tr>
+        <th class="text-center">Nombre de obra</th>
+        <th class="text-center">Tipo</th>
+        <th class="text-center">Coordiandor de Obra </th>
+        <th class="text-center">C.I.V</th>
+        <th class="text-center">Arancel</th>
+        <th class="text-center">Fecha</th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <center>
+        <% @visados.each do |visado| %>
+          <tr>
+          <td><%= visado.obra.nombre %></td>
+          <td><%= visado.tipo %></td>
+          <td><%= visado.obra.coordinador_proyecto.nombres %> <%= visado.obra.coordinador_proyecto.apellidos %></td>
+          <td><%= number_to_currency(visado.obra.coordinador_proyecto.civ, unit: " ", delimiter: ".", separator: ",", precision: 0)%>
+          <td><%= number_to_currency(visado.arancel,unit:"Bs.F  ", delimiter: ".", separator: ",")%></td>
+          <td><%= ltz(visado.created_at) %></td>
+          </tr>
+      <% end %>
+    </center>
+  </tbody>
+</table>
+  <table class="col-md-12 text-center table table-striped table-hover">
+    <thead>
+      <tr>
+        <th class="text-center"><strong> CANT. VISADOS POR BUSQUEDA:  <%= @visados.distinct.count(:obra_id) %></strong></th>
+        <center>
+          <th class="text-center"><strong>INGRESOS POR BUSQUEDA:  <%=number_to_currency(@visados.sum(:arancel, :conditions => ["tipo = ?",@visado_params]), unit: "Bs.F   ", precision: 2, delimiter: ".", separator: ",") %>  </strong></th>
+
+        </center>
+        <CENTER> 
+          <strong> 
+            tipo de visado mas realizado: <%= @moda %> 
+          </strong>
+        </CENTER>
+      </tr>
+    </thead>
+  </table>
+  
+<% end %>
+
+</table>
+<br>
+
+<script>
+$('#date-expand').click(function(){
+  $('#date-filter').toggle();
+});
+
+if ($('#desde').val()!='' ||$('#hasta').val()!=''){
+  $('#date-filter').show();
+}
+$(document).ready(function(){
+  var dateTimePickerOptions = {
+    format: 'YYYY-MM-DD',
+    stepping: 1,
+    //useCurrent: false,
+    sideBySide: true,
+    showClear: true,
+    showClose: true,
+    showTodayButton: true,
+  };
+  $('.bootstrap-datetimepicker').datetimepicker(dateTimePickerOptions);
+});
+
+
+</script>
+
